@@ -2,11 +2,17 @@ import re
 import sys
 
 def main(st):
-    # InputText = input("検証したい文字列を入力してください")
-    # InputStringList = list(InputText)
     InputStringList = list(st)
+    """
+    Count配列の4つの要素を左から解説
+    ・波かっこの開き閉じの個数
+    ・丸かっこの開き閉じの個数
+    ・四角かっこの開き閉じの個数
+    ・改行文字の個数
+    """
     Count = [0,0,0,0]
     StringLengthCount = 0
+    line_num = 1
 
     for i in InputStringList:
         if(re.match(r"\{",i)):
@@ -44,8 +50,7 @@ def main(st):
             elif Count[1] % 2 != 0: raise ValueError("かっこが正常に閉じられていない可能性があります") 
             elif Count[2] % 2 != 0: raise ValueError("角かっこが正常に閉じられていない可能性があります")
             else: 
-                print("---------------------------------------------\n 与えられた文字の検証を終了します。改行の数は"+ str(Count[3]) +"回でした\n---------------------------------------------\n",)
-
+                print("---------------------------------------------\n 与えられた文字の検証を終了します。改行の数は"+ str(Count[3]) +"回でした\n---------------------------------------------\n")
 
 if __name__ == "__main__":
     if len(sys.argv)==2:
@@ -53,6 +58,10 @@ if __name__ == "__main__":
             lines = f.readlines()
             st=[line for line in lines]
             print(st)
+            line_num = 1
             for i in st:
                 main(i)
-    # main()
+                with open("./output.txt","w") as out:
+                    out.white(str(line_num) + ":" + st)
+                    line_num += 1
+                    
