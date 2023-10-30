@@ -36,7 +36,6 @@ if len(sys.argv)==2:
                     print(char)
                     if(char == "\n" or len(line) == 0):
                         if(next_indent):
-                            print(store_stack)
                             print(f"{output["row"]}行目の走査を完了しました(階層構造{output["block"]})")
                             output["block"] -= 1
                             OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
@@ -54,7 +53,6 @@ if len(sys.argv)==2:
                                 output["row"] += 1
                                 next_indent = False
                         else:
-                            print(store_stack)
                             print(f"{output["row"]}行目の走査を完了しました")
                             OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
                             if(len(result) == 0):
