@@ -87,4 +87,3 @@ if len(sys.argv)==2:
                             open["square"] -= 1
                             op["block"] -= 1
                         store_stack.append(char)
-                        
