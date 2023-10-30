@@ -5,7 +5,7 @@ if len(sys.argv)==2:
     with open(sys.argv[1], 'r') as InFile:
         with open("./output.txt","w") as OutFile:
             result = InFile.readlines()
-            output = {
+            op = {
                 "row": 1,
                 "block": 0 
             }
@@ -37,12 +37,12 @@ if len(sys.argv)==2:
                         out_str = "".join(store_stack)
                         err_st = "個閉じ忘れあるよ！"
                         if(next_indent):
-                            print(f"{output["row"]}行目の走査を完了しました(階層構造{output["block"]})")
-                            output["block"] -= 1
-                            OutFile.write(f"{str(output["row"])}({output["block"]}):{out_str}\n")
+                            print(f"{op["row"]}行目の走査を完了しました(階層構造{op["block"]})")
+                            op["block"] -= 1
+                            OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
-                                if(not output["block"] == 0):
+                                if(not op["block"] == 0):
                                     if(not open["wave"] == 0):
                                         print(f"波かっこが{open["wave"]}{err_st}")
                                     elif(not open["square"] == 0):
@@ -50,15 +50,15 @@ if len(sys.argv)==2:
                                     elif(not open["circle"] == 0):
                                         print(f"丸かっこが{open["wave"]}{err_st}")
                             else:
-                                output["block"] += 1
-                                output["row"] += 1
+                                op["block"] += 1
+                                op["row"] += 1
                                 next_indent = False
                         else:
-                            print(f"{output["row"]}行目の走査を完了しました")
-                            OutFile.write(f"{str(output["row"])}({output["block"]}):{out_str}\n")
+                            print(f"{op["row"]}行目の走査を完了しました")
+                            OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
-                                if(not output["block"] == 0):
+                                if(not op["block"] == 0):
                                     if(not open["wave"] == 0):
                                         print(f"波かっこが{open["wave"]}個閉じ忘れあるよ！")
                                     elif(not open["square"] == 0):
@@ -66,25 +66,25 @@ if len(sys.argv)==2:
                                     elif(not open["circle"] == 0):
                                         print(f"丸かっこが{open["wave"]}個閉じ忘れあるよ！")
                             else:
-                                output["row"] += 1
+                                op["row"] += 1
                     else:
                         if(char == "{"):
                             open["wave"] += 1
-                            output["block"] += 1
+                            op["block"] += 1
                         elif(char == "}"):
                             open["wave"] -= 1
-                            output["block"] -= 1
+                            op["block"] -= 1
                         elif(char == "("):
                             open["circle"] += 1
-                            output["block"] += 1
+                            op["block"] += 1
                         elif(char == ")"):
                             open["circle"] -= 1
-                            output["block"] -= 1
+                            op["block"] -= 1
                         elif(char == "["):
                             open["square"] += 1
-                            output["block"] += 1
+                            op["block"] += 1
                         elif(char == "]"):
                             open["square"] -= 1
-                            output["block"] -= 1
+                            op["block"] -= 1
                         store_stack.append(char)
                         
