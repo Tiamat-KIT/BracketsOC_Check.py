@@ -30,12 +30,12 @@ if len(sys.argv)==2:
                     next_indent = False
                 print(f"一行：{str_line}")
                 line = list(str_line)
-                # print(f"一行の配列：{line}")
                 for i in range(len(line)):
                     char = line.pop(0)
                     print(char)
                     if(char == "\n" or len(line) == 0):
                         out_str = "".join(store_stack)
+                        err_st = "個閉じ忘れあるよ！"
                         if(next_indent):
                             print(f"{output["row"]}行目の走査を完了しました(階層構造{output["block"]})")
                             output["block"] -= 1
@@ -44,11 +44,11 @@ if len(sys.argv)==2:
                                 print("走査終了")
                                 if(not output["block"] == 0):
                                     if(not open["wave"] == 0):
-                                        print(f"波かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                        print(f"波かっこが{open["wave"]}{err_st}")
                                     elif(not open["square"] == 0):
-                                        print(f"角かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                        print(f"角かっこが{open["wave"]}{err_st}")
                                     elif(not open["circle"] == 0):
-                                        print(f"丸かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                        print(f"丸かっこが{open["wave"]}{err_st}")
                             else:
                                 output["block"] += 1
                                 output["row"] += 1
