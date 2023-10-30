@@ -1,3 +1,4 @@
+# Pythonプログラム
 import re
 import sys
 
