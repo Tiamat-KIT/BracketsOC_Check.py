@@ -1,58 +1,91 @@
 import re
 import sys
 
-# if __name__ == "__main__":
 if len(sys.argv)==2:
     with open(sys.argv[1], 'r') as InFile:
-        result = InFile.read()
-        # print(result)
-        output_row_num = 0
-        open_wave = 0
-        open_square = 0
-        open_circle = 0
-        block_count = 0
-        char_count = 0
-        store_stack = []
-        full_text = list(result)
-        with open("./output.txt","w") as out:
-            while True:
-                char = full_text.pop(0)
-                if(char == "{"):
-                    open_wave += 1
-                    block_count += 1
-                elif(char == "}"):
-                    open_wave -= 1
-                    block_count -= 1
-                elif(char == "("):
-                    open_circle += 1
-                    block_count += 1
-                elif(char == ")"):
-                    open_circle -= 1
-                    block_count -= 1
-                elif(char == "["):
-                    open_square += 1
-                    block_count += 1
-                elif(char == "]"):
-                    open_square -= 1
-                    block_count -= 1
+        with open("./output.txt","w") as OutFile:
+            result = InFile.readlines()
+            output = {
+                "row": 1,
+                "block": 0 
+            }
 
-                if(char == "\n"):
-                    output_row_num += 1
-                    char_count = 1
-                    out.write(str(output_row_num) + "(" + str(block_count) + ")" + ": " + ''.join(store_stack) + "\n")
-                    store_stack = []
-                    print("改行文字が入りました")
-                else: 
-                    store_stack.append(char)
-                char_count += 1
-                if(len(full_text)==0):
-                    output_row_num += 1
-                    out.write(str(output_row_num) + "(" + str(block_count) + ")" + ": " + ''.join(store_stack) + "\n")
-                    if(open_circle): raise ValueError("丸括弧閉じてないぞ")
-                    elif(open_square): raise ValueError("角括弧閉じてないぞ")
-                    elif(open_wave): raise ValueError("波括弧閉じてないぞ")
-                    else: print("走査を終了します")
-                    break
+            open = {
+                "wave": 0,
+                "square": 0,
+                "circle": 0
+            }
             
-
-            
+            next_indent = False
+            char_count = 0
+            store_stack = []
+            open_pattern =  r'[{[(]\n$'
+            close_patterm = r"[\}\)\]]\n$"
+            for str_line in range(len(result)):
+                str_line = result.pop(0)
+                store_stack = []
+                if(re.findall(open_pattern,str_line)):
+                    next_indent = True
+                elif(re.findall(close_patterm,str_line)):
+                    next_indent = False
+                print(f"一行：{str_line}")
+                line = list(str_line)
+                # print(f"一行の配列：{line}")
+                for i in range(len(line)):
+                    char = line.pop(0)
+                    print(char)
+                    if(char == "\n" or len(line) == 0):
+                        if(next_indent):
+                            print(store_stack)
+                            print(f"{output["row"]}行目の走査を完了しました(階層構造{output["block"]})")
+                            output["block"] -= 1
+                            OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
+                            if(len(result) == 0):
+                                print("走査終了")
+                                if(not output["block"] == 0):
+                                    if(not open["wave"] == 0):
+                                        print(f"波かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                    elif(not open["square"] == 0):
+                                        print(f"角かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                    elif(not open["circle"] == 0):
+                                        print(f"丸かっこが{open["wave"]}個閉じ忘れあるよ！")
+                            else:
+                                output["block"] += 1
+                                output["row"] += 1
+                                next_indent = False
+                        else:
+                            print(store_stack)
+                            print(f"{output["row"]}行目の走査を完了しました")
+                            OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
+                            if(len(result) == 0):
+                                print("走査終了")
+                                if(not output["block"] == 0):
+                                    if(not open["wave"] == 0):
+                                        print(f"波かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                    elif(not open["square"] == 0):
+                                        print(f"角かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                    elif(not open["circle"] == 0):
+                                        print(f"丸かっこが{open["wave"]}個閉じ忘れあるよ！")
+                            else:
+                                output["row"] += 1
+                    else:
+                        if(char == "{"):
+                            open["wave"] += 1
+                            output["block"] += 1
+                        elif(char == "}"):
+                            open["wave"] -= 1
+                            output["block"] -= 1
+                        elif(char == "("):
+                            open["circle"] += 1
+                            output["block"] += 1
+                        elif(char == ")"):
+                            open["circle"] -= 1
+                            output["block"] -= 1
+                        elif(char == "["):
+                            open["square"] += 1
+                            output["block"] += 1
+                        elif(char == "]"):
+                            open["square"] -= 1
+                            output["block"] -= 1
+                        store_stack.append(char)
+                        
