@@ -5,17 +5,8 @@ if len(sys.argv)==2:
     with open(sys.argv[1], 'r') as InFile:
         with open("./output.txt","w") as OutFile:
             result = InFile.readlines()
-            op = {
-                "row": 1,
-                "block": 0 
-            }
-
-            open = {
-                "wave": 0,
-                "square": 0,
-                "circle": 0
-            }
-            
+            op = {"row": 1,"block": 0}
+            open = {"wave": 0,"square": 0,"circle": 0}
             next_indent = False
             char_count = 0
             store_stack = []
