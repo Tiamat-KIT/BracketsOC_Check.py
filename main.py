@@ -35,10 +35,11 @@ if len(sys.argv)==2:
                     char = line.pop(0)
                     print(char)
                     if(char == "\n" or len(line) == 0):
+                        out_str = "".join(store_stack)
                         if(next_indent):
                             print(f"{output["row"]}行目の走査を完了しました(階層構造{output["block"]})")
                             output["block"] -= 1
-                            OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
+                            OutFile.write(f"{str(output["row"])}({output["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
                                 if(not output["block"] == 0):
@@ -54,7 +55,7 @@ if len(sys.argv)==2:
                                 next_indent = False
                         else:
                             print(f"{output["row"]}行目の走査を完了しました")
-                            OutFile.write(f"{str(output["row"])}({output["block"]}):{"".join(store_stack)}\n")
+                            OutFile.write(f"{str(output["row"])}({output["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
                                 if(not output["block"] == 0):
