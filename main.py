@@ -30,13 +30,13 @@ def Check(char,In_dict,Out_dict):
         Out_dict["block"] -= 1
 
 def res_print(In_dict,Out_dict):
-    err_st = "個閉じ忘れあるよ！"
-    if(Out_dict["block"] > 0):
-        if(In_dict["wave"] > 0):
+    err_st = "個対応してないよ！"
+    if(Out_dict["block"] != 0):
+        if(In_dict["wave"] != 0):
             print(f"波かっこが{In_dict["wave"]}{err_st}")
-        elif(In_dict["square"] > 0):
+        elif(In_dict["square"] != 0):
             print(f"角かっこが{In_dict["wave"]}{err_st}")
-        elif(In_dict["circle"] > 0):
+        elif(In_dict["circle"] != 0):
             print(f"丸かっこが{In_dict["wave"]}{err_st}")
 
 if len(sys.argv)==2:
@@ -51,6 +51,9 @@ if len(sys.argv)==2:
             if(len(result) == 1):
                 for char in list(result.pop(0)):
                     Check(char,open,op)
+                    store_stack.append(char)
+                out_str = "".join(store_stack)
+                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                 res_print(open,op)
             else:
                 for str_line in range(len(result)):
