@@ -52,11 +52,9 @@ if len(sys.argv)==2:
                 str_line = result.pop(0)
                 store_stack = []
                 next_indent = O_or_C(str_line)
-                print(f"一行：{str_line}")
                 line = list(str_line)
                 for i in range(len(line)):
                     char = line.pop(0)
-                    print(char)
                     if(char == "\n" or len(line) == 0):
                         out_str = "".join(store_stack)
                         err_st = "個閉じ忘れあるよ！"
@@ -64,7 +62,6 @@ if len(sys.argv)==2:
                             op["block"] -= 1
                             OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
-                                print("走査終了")
                                 res_print(open,op,err_st)
                             else:
                                 op["block"] += 1
@@ -73,7 +70,6 @@ if len(sys.argv)==2:
                         else:
                             OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
-                                print("走査終了")
                                 res_print(open,op,err_st)
                             else:
                                 op["row"] += 1
