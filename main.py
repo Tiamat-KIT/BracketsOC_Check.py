@@ -29,13 +29,14 @@ def Check(char,In_dict,Out_dict):
         In_dict["square"] -= 1
         Out_dict["block"] -= 1
 
-def res_print(In_dict,Out_dict,err_st):
-     if(not Out_dict["block"] == 0):
-        if(not In_dict["wave"] == 0):
+def res_print(In_dict,Out_dict):
+    err_st = "個閉じ忘れあるよ！"
+    if(Out_dict["block"] > 0):
+        if(In_dict["wave"] > 0):
             print(f"波かっこが{In_dict["wave"]}{err_st}")
-        elif(not In_dict["square"] == 0):
+        elif(In_dict["square"] > 0):
             print(f"角かっこが{In_dict["wave"]}{err_st}")
-        elif(not In_dict["circle"] == 0):
+        elif(In_dict["circle"] > 0):
             print(f"丸かっこが{In_dict["wave"]}{err_st}")
 
 if len(sys.argv)==2:
@@ -47,32 +48,36 @@ if len(sys.argv)==2:
             next_indent = False
             char_count = 0
             store_stack = []
-            
-            for str_line in range(len(result)):
-                str_line = result.pop(0)
-                store_stack = []
-                next_indent = O_or_C(str_line)
-                line = list(str_line)
-                for i in range(len(line)):
-                    char = line.pop(0)
-                    if(char == "\n" or len(line) == 0):
-                        out_str = "".join(store_stack)
-                        err_st = "個閉じ忘れあるよ！"
-                        if(next_indent):
-                            op["block"] -= 1
-                            OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
-                            if(len(result) == 0):
-                                res_print(open,op,err_st)
+            if(len(result) == 1):
+                for char in list(result.pop(0)):
+                    Check(char,open,op)
+                res_print(open,op)
+            else:
+                for str_line in range(len(result)):
+                    str_line = result.pop(0)
+                    store_stack = []
+                    next_indent = O_or_C(str_line)
+                    line = list(str_line)
+                    for i in range(len(line)):
+                        char = line.pop(0)
+                        if(char == "\n" or len(line) == 0):
+                            out_str = "".join(store_stack)
+                            Check(char,open,op)
+                            if(next_indent):
+                                op["block"] -= 1
+                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
+                                if(len(result) == 0):
+                                    res_print(open,op)
+                                else:
+                                    op["block"] += 1
+                                    op["row"] += 1
+                                    next_indent = False
                             else:
-                                op["block"] += 1
-                                op["row"] += 1
-                                next_indent = False
+                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
+                                if(len(result) == 0):
+                                    res_print(open,op)
+                                else:
+                                    op["row"] += 1
                         else:
-                            OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
-                            if(len(result) == 0):
-                                res_print(open,op,err_st)
-                            else:
-                                op["row"] += 1
-                    else:
-                        Check(char,open,op)
-                        store_stack.append(char)
+                            Check(char,open,op)
+                            store_stack.append(char)
