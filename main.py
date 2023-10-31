@@ -64,11 +64,12 @@ if len(sys.argv)==2:
                     for i in range(len(line)):
                         char = line.pop(0)
                         if(char == "\n" or len(line) == 0):
+                            store_stack.append(char)
                             out_str = "".join(store_stack)
                             Check(char,open,op)
                             if(next_indent):
                                 op["block"] -= 1
-                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
+                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}")
                                 if(len(result) == 0):
                                     res_print(open,op)
                                 else:
@@ -76,7 +77,7 @@ if len(sys.argv)==2:
                                     op["row"] += 1
                                     next_indent = False
                             else:
-                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
+                                OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}")
                                 if(len(result) == 0):
                                     res_print(open,op)
                                 else:
