@@ -1,6 +1,42 @@
 # Pythonプログラム
 import re
 import sys
+def O_or_C(check_string):
+    open_pattern =  r'[{[(]\n$'
+    close_patterm = r"[\}\)\]]\n$"
+    if(re.findall(open_pattern,str_line)):
+        return True
+    elif(re.findall(close_patterm,str_line)):
+        return False
+        
+def Check(char,In_dict,Out_dict):
+    if(char == "{"):
+        In_dict["wave"] += 1
+        Out_dict["block"] += 1
+    elif(char == "}"):
+        In_dict["wave"] -= 1
+        Out_dict["block"] -= 1
+    elif(char == "("):
+        In_dict["circle"] += 1
+        Out_dict["block"] += 1
+    elif(char == ")"):
+        In_dict["circle"] -= 1
+        Out_dict["block"] -= 1
+    elif(char == "["):
+        In_dict["square"] += 1
+        Out_dict["block"] += 1
+    elif(char == "]"):
+        In_dict["square"] -= 1
+        Out_dict["block"] -= 1
+
+def res_print(In_dict,Out_dict,err_st):
+     if(not Out_dict["block"] == 0):
+        if(not In_dict["wave"] == 0):
+            print(f"波かっこが{In_dict["wave"]}{err_st}")
+        elif(not In_dict["square"] == 0):
+            print(f"角かっこが{In_dict["wave"]}{err_st}")
+        elif(not In_dict["circle"] == 0):
+            print(f"丸かっこが{In_dict["wave"]}{err_st}")
 
 if len(sys.argv)==2:
     with open(sys.argv[1], 'r') as InFile:
@@ -11,15 +47,11 @@ if len(sys.argv)==2:
             next_indent = False
             char_count = 0
             store_stack = []
-            open_pattern =  r'[{[(]\n$'
-            close_patterm = r"[\}\)\]]\n$"
+            
             for str_line in range(len(result)):
                 str_line = result.pop(0)
                 store_stack = []
-                if(re.findall(open_pattern,str_line)):
-                    next_indent = True
-                elif(re.findall(close_patterm,str_line)):
-                    next_indent = False
+                next_indent = O_or_C(str_line)
                 print(f"一行：{str_line}")
                 line = list(str_line)
                 for i in range(len(line)):
@@ -29,53 +61,22 @@ if len(sys.argv)==2:
                         out_str = "".join(store_stack)
                         err_st = "個閉じ忘れあるよ！"
                         if(next_indent):
-                            print(f"{op["row"]}行目の走査を完了しました(階層構造{op["block"]})")
                             op["block"] -= 1
                             OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
-                                if(not op["block"] == 0):
-                                    if(not open["wave"] == 0):
-                                        print(f"波かっこが{open["wave"]}{err_st}")
-                                    elif(not open["square"] == 0):
-                                        print(f"角かっこが{open["wave"]}{err_st}")
-                                    elif(not open["circle"] == 0):
-                                        print(f"丸かっこが{open["wave"]}{err_st}")
+                                res_print(open,op,err_st)
                             else:
                                 op["block"] += 1
                                 op["row"] += 1
                                 next_indent = False
                         else:
-                            print(f"{op["row"]}行目の走査を完了しました")
                             OutFile.write(f"{str(op["row"])}({op["block"]}):{out_str}\n")
                             if(len(result) == 0):
                                 print("走査終了")
-                                if(not op["block"] == 0):
-                                    if(not open["wave"] == 0):
-                                        print(f"波かっこが{open["wave"]}個閉じ忘れあるよ！")
-                                    elif(not open["square"] == 0):
-                                        print(f"角かっこが{open["wave"]}個閉じ忘れあるよ！")
-                                    elif(not open["circle"] == 0):
-                                        print(f"丸かっこが{open["wave"]}個閉じ忘れあるよ！")
+                                res_print(open,op,err_st)
                             else:
                                 op["row"] += 1
                     else:
-                        if(char == "{"):
-                            open["wave"] += 1
-                            op["block"] += 1
-                        elif(char == "}"):
-                            open["wave"] -= 1
-                            op["block"] -= 1
-                        elif(char == "("):
-                            open["circle"] += 1
-                            op["block"] += 1
-                        elif(char == ")"):
-                            open["circle"] -= 1
-                            op["block"] -= 1
-                        elif(char == "["):
-                            open["square"] += 1
-                            op["block"] += 1
-                        elif(char == "]"):
-                            open["square"] -= 1
-                            op["block"] -= 1
+                        Check(char,open,op)
                         store_stack.append(char)
